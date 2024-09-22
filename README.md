@@ -16,3 +16,22 @@
 
 `git push`:推送到远端
 
+`git pull <远端仓库名> <远端分支名>:<本地分支名> ` :
+
+git pull origin main:main
+
+## 你需要做什么
+
+1. `git clone` 将仓库克隆下来
+
+2. `git branch --set-upstream-to=<remote(远端名)>/<remote branch(分支名)>` 将本地main分支与远端对应分支关联，例如
+
+   ```
+   git branch --set-upstream-to=origin/zhou
+   ```
+
+3. 使用`git add .` 将修改添加到暂存区
+
+4. 使用`git commit -m "xxx"`在本地提交修改
+
+5. `git push`将本地修改推送到远端 **（在那之前一定要确保已经关联了正确的分支！)**
