@@ -1,0 +1,2 @@
+C:\Users\86188\OneDrive\workSpace\sneak\x64\Debug\sneak.exe
+C:\Users\86188\OneDrive\workSpace\贪吃蛇\sneak\x64\Debug\sneak.exe
