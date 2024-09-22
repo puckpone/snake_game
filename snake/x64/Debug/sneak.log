@@ -1,3 +1,4 @@
-﻿  main.cpp
-C:\Users\86188\OneDrive\workSpace\贪吃蛇\sneak\main.cpp(160,15): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
-  sneak.vcxproj -> C:\Users\86188\OneDrive\workSpace\贪吃蛇\sneak\x64\Debug\sneak.exe
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: 中间目录(x64\Debug\)包含从另一个项目(sneak.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
+  main.cpp
+C:\Users\86188\OneDrive\workSpace\贪吃蛇\snake_game\snake\main.cpp(155,15): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+  sneak.vcxproj -> C:\Users\86188\OneDrive\workSpace\贪吃蛇\snake_game\snake\x64\Debug\snake.exe
