@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\86152\Desktop\新建文件夹\snake_game\snake\main.cpp(156,15): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+  sneak.vcxproj -> C:\Users\86152\Desktop\新建文件夹\snake_game\snake\x64\Debug\snake.exe
