@@ -267,7 +267,38 @@ void initView(void)   //初始界面
 */
 void Start(void)  //打印界面 （蛇，地图。食物）   
 {
-
+    //system("cls");
+    HideConsoleCursor();
+    init();
+    //打印地图
+    for (int i = 0; i < H; i++)
+        for (int j = 0; j < W; j++)
+        {
+            int X = i + OFFSET_X;
+            int Y = j + OFFSET_Y;
+            gotoXY(X, Y);
+            switch (map[i][j])
+            {
+            case 1:
+                printf("#");
+                break;
+            case 0:
+                break;
+            case 2:
+                printf("+");
+                break;
+            }
+        }
+    //打印蛇
+    gotoXY(s[0][0] + OFFSET_X, s[0][1] + OFFSET_Y);
+    printf("@");
+    for (int i = 1; i < len; i++)
+    {
+        int X = s[i][0] + OFFSET_X;
+        int Y = s[i][1] + OFFSET_Y;
+        gotoXY(X, Y);
+        printf("*");
+    }
 }
 
 /*
@@ -307,7 +338,104 @@ void Start(void)  //打印界面 （蛇，地图。食物）
 */
 void gameView(void)  //开始游戏 界面     //考虑蛇的速度 sleep(int)  gotoXY打印蛇身
 {
+restart:           //重新开始
+    system("cls");
+    Start();
+    int flag;  //蛇头前方是什么 0:蛇身/墙壁  1：食物  2：空地
+    while (1)
+    {
+        if (OPT == 1)
+        {
+            Sleep(SPEED_1);
+        }
+        else if (OPT == 2)
+        {
+            Sleep(SPEED_2);
+        }
+        else if (OPT == 3)
+        {
+            Sleep(SPEED_3);
+        }
 
+        int pause_choose = 3;
+        if (_kbhit())  //判断用户有没有输入
+        {
+            int ch = _getch(); //获取用户输入
+            switch (ch)
+            {
+            case'q':
+            case'Q':
+                pause_choose = pauseView();
+                break;
+            default:
+                updateDir(ch);
+            }
+
+        }
+        if (pause_choose == 1) {
+            //打印地图
+            for (int i = 0; i < H; i++)
+                for (int j = 0; j < W; j++)
+                {
+                    int X = i + OFFSET_X;
+                    int Y = j + OFFSET_Y;
+                    gotoXY(X, Y);
+                    switch (map[i][j])
+                    {
+                    case 1:
+                        printf("#");
+                        break;
+                    case 0:
+                        break;
+                    case 2:
+                        printf("+");
+                        break;
+                    }
+                }
+            //打印蛇
+            gotoXY(s[0][0] + OFFSET_X, s[0][1] + OFFSET_Y);
+            printf("@");
+            for (int i = 1; i < len; i++)
+            {
+                int X = s[i][0] + OFFSET_X;
+                int Y = s[i][1] + OFFSET_Y;
+                gotoXY(X, Y);
+                printf("*");
+            }
+        }//1继续游戏，2返回主菜单,0重新开始
+        else if (pause_choose == 2)
+        {
+            system("cls");
+            return;
+        }
+        else if (pause_choose == 0) goto restart;
+        flag = HeadFront();
+        if (flag == 0) {
+            OverView();
+            return;
+        }
+        move(flag);
+
+        //int count = 0;
+        if (flag == 1)
+        {
+            generateFood();   //吃到食物后，再生成一个
+            //count++;
+        }
+
+
+
+        clear(1 + OFFSET_X, 1 + OFFSET_Y, H - 2, W - 2);
+        gotoXY(FOOD_X + OFFSET_X, FOOD_Y + OFFSET_Y);
+        printf("+");
+        gotoXY(s[0][0] + OFFSET_X, s[0][1] + OFFSET_Y);
+        printf("@");
+        for (int i = 1; i < len; i++)
+        {
+            gotoXY(s[i][0] + OFFSET_X, s[i][1] + OFFSET_Y);
+            printf("*");
+        }
+    }
 }
 
 
@@ -406,7 +534,75 @@ int pauseView(void)  //暂停界面
 */
 void  selectionView(void)
 {
+    system("cls");
+    int userChoose = 0;
+    while (1)
+    {
+        // ----------------- 打印界面 -----------------
+        gotoXY(58, 9);
+        printf("---难 度 选 择---");
+        if (userChoose == 0) setPrintColor(0x6f);
+        gotoXY(64, 12);
+        printf("容易\t");
+        if (userChoose == 0) setPrintColor(0x0f);
 
+        if (userChoose == 1) setPrintColor(0x6f);
+        gotoXY(64, 15);
+        printf("简单\t");
+        if (userChoose == 1) setPrintColor(0x0f);
+
+        if (userChoose == 2) setPrintColor(0x6f);
+        gotoXY(64, 18);
+        printf("困难\t");
+        if (userChoose == 2) setPrintColor(0x0f);
+
+        if (userChoose == 3) setPrintColor(0x6f);
+        gotoXY(63, 24);
+        printf("返  回");
+        if (userChoose == 3) setPrintColor(0x0f);
+
+        //if (userChoose == 3) setPrintColor(0x6f);
+        //gotoXY(64, 24);
+        //printf("返  回");
+        //if (userChoose == 3) setPrintColor(0x0f);
+
+        // ---------------- 接收用户输入 --------------
+        char input = _getch();
+        // -------------判断是方向上下还是回车------------
+        switch (input)
+        {
+        case 'w':
+            userChoose -= 1;
+            if (userChoose == -1) userChoose = 3;
+            break;
+        case 's':
+            userChoose = (userChoose + 1) % 4;
+            break;
+        case '\r':
+            clear(3, 2, 80, 20);
+            switch (userChoose)
+            {
+            case 0:
+                OPT = 1;
+                gameView();
+                break;
+            case 1:
+                OPT = 2;
+                gameView();
+                break;
+            case 2:
+                OPT = 3;
+                gameView();
+                break;
+            case 3:
+                initView();
+            default:
+                break;
+            }
+            clear(3, 2, 36, 20);
+            break;
+        }
+    }
 }
 
 //结束界面
@@ -427,10 +623,10 @@ void OverView()
         // ----------------- 打印界面 -----------------
         gotoXY(54, 6);
         printf("---游 戏 结 束---");
-        if (userChoose == 0) setPrintColor(0x6f);
+        setPrintColor(0x6f);
         gotoXY(58, 9);
         printf("");
-        if (userChoose == 0) setPrintColor(0x0f);
+        setPrintColor(0x0f);
 
         setPrintColor(0x6f);
         gotoXY(58, 18);
@@ -444,20 +640,7 @@ void OverView()
         switch (input) {
         case '\r':
             clear(3, 2, 80, 20);
-            switch (userChoose) {
-            case 1:
-                return;  //调用 开始游戏界面 函数
-                break;
-            case 2:
-                selectionView();  //调用 难度选择 函数
-                break;
-            case 3:
-                return;  //调用 初始界面 函数
-                break;
-            default:
-                break;
-            }
-            clear(3, 2, 36, 20);
+            return;
             break;
         }
     }
@@ -493,6 +676,24 @@ void OverView()
 */
 void init(void)  //开始游戏初始化
 {
+    for (int i = 0; i < H; i++)
+        for (int j = 0; j < W; j++)
+        {
+            if (i == 0 || j == 0 || i == H - 1 || j == W - 1)
+                map[i][j] = 1;
+            else
+                map[i][j] = 0;
+        }
+
+    len = 3;
+    s[0][0] = 5;  //蛇头初始X坐标
+    s[0][1] = W - 4;  //蛇头初始Y坐标
+    for (int i = 1; i < 3; i++)
+    {
+        s[i][0] = s[i - 1][0] - 1;
+        s[i][1] = s[i - 1][1];
+    }
+    generateFood();  //生成一个食物
 }
 
 
@@ -508,7 +709,16 @@ void init(void)  //开始游戏初始化
 
 void generateFood(void)  //生成食物
 {
-    
+    int t = 1; //t==1就说明和蛇身重合，继续生成
+    while (t)
+    {
+        t = 0;
+        FOOD_X = rand() % (H - 2) + 1;
+        FOOD_Y = rand() % (W - 2) + 1;
+        for (int i = 0; i < len; i++)
+            if (s[i][0] == FOOD_X && s[i][1] == FOOD_Y) t = 1;
+    }
+    map[FOOD_X][FOOD_Y] = 2;
 }
 
 
@@ -531,7 +741,12 @@ void generateFood(void)  //生成食物
 */
 void updateDir(char ch)   // 修改方向函数
 {
-
+    if ((ch == 'w' || ch == 'W') && (dir == 's' || dir == 'S'));
+    else if ((ch == 's' || ch == 'W') && (dir == 'w' || dir == 'W'));
+    else if ((ch == 'a' || ch == 'A') && (dir == 'd' || dir == 'D'));
+    else if ((ch == 'd' || ch == 'D') && (dir == 'a' || dir == 'A'));
+    else if (ch == 'w' || ch == 'W' || ch == 's' || ch == 'S' || ch == 'a' || ch == 'A' || ch == 'd' || ch == 'D')
+        dir = ch;
 }
 
 
@@ -558,7 +773,47 @@ void updateDir(char ch)   // 修改方向函数
 */
 int HeadFront(void)  // 判断蛇头前面是什么 
 {
-    	return 0;
+    int X = s[0][0]; //蛇头的X坐标
+    int Y = s[0][1];  //蛇头的Y坐标
+
+    int X_next;  //蛇头下一个位置的X坐标
+    int Y_next;  //蛇头下一个位置的X坐标
+
+    switch (dir)
+    {
+    case 'w':
+    case 'W':
+        X_next = X;
+        Y_next = Y - 1;
+        break;
+
+    case 's':
+    case 'S':
+        X_next = X;
+        Y_next = Y + 1;
+        break;
+
+    case 'a':
+    case 'A':
+        X_next = X - 1;
+        Y_next = Y;
+        break;
+
+    case 'd':
+    case 'D':
+        X_next = X + 1;
+        Y_next = Y;
+        break;
+    }
+    for (int i = 1; i < len; i++)
+    {
+        if (s[i][0] == X_next && s[i][1] == Y_next) return 0;   //蛇头的下一个位置是蛇身
+    }
+
+    if (map[X_next][Y_next] == 1) return 0; //墙壁
+    else if (X_next == FOOD_X && Y_next == FOOD_Y) return 1; //食物
+
+    return 2; //空地 
 }
 
 
@@ -585,6 +840,39 @@ int HeadFront(void)  // 判断蛇头前面是什么
 */
 void move(int result)  //蛇移动后的数据情况
 {
+    if (result == 1) len++;
+    for (int i = len - 1; i >= 1; i--)
+    {
+        s[i][0] = s[i - 1][0];
+        s[i][1] = s[i - 1][1];
+    }
+    switch (dir)
+    {
+    case 's':
+    case 'S':
+        if (result == 1) map[s[0][0]][s[0][1] + 1] = 0;  //删除食物
+        s[0][1]++;   //向下移动，Y坐标加1
+        if (s[0][1] == W - 1) s[0][1] = 1;
+        break;
+    case 'w':
+    case 'W':
+        if (result == 1) map[s[0][0]][s[0][1] - 1] = 0;  //删除食物
+        s[0][1]--;   //向上移动，Y坐标减1
+        if (s[0][1] == 0) s[0][1] = W - 2;
+        break;
+    case 'a':
+    case 'A':
+        if (result == 1) map[s[0][0] - 1][s[0][1]] = 0;  //删除食物
+        s[0][0]--;   //向左移动，X坐标减1
+        if (s[0][0] == 0) s[0][0] = H - 2;
+        break;
+    case 'd':
+    case 'D':
+        if (result == 1) map[s[0][0] + 1][s[0][1]] = 0;  //删除食物
+        s[0][0]++;   //向右移动，X坐标加1
+        if (s[0][0] == H - 1) s[0][0] = 1;
+        break;
+    }
 
 }
 
