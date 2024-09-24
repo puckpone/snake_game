@@ -54,5 +54,5 @@ git pull origin main:main
 
 # 简历可以怎么写？
 
-c语言 easyx Git团队协作 代码架构 OPP思想
+c语言 easyx Git团队协作 代码架构 OPP思想 visual studio 断点调试
 
